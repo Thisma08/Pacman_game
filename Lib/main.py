@@ -18,9 +18,8 @@ class Game(object):
 
     def startGame(self):
         self.setBackground()
-        self.nodes = NodeGroup()
-        self.nodes.setupTestNodes()
-        self.player = Player(self.nodes.nodeList[0])
+        self.nodes = NodeGroup("mazetest.txt")
+        self.player = Player(self.nodes.getStartTempNode())
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
