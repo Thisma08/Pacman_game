@@ -1,4 +1,4 @@
-from constants import *
+from constants_file import *
 
 class MainMode(object):
     def __init__(self):
@@ -8,13 +8,13 @@ class MainMode(object):
     def update(self, dt):
         self.timer += dt
         if self.timer >= self.time:
-            if self.mode is SCATTER:
+            if self.mode is FLEEING:
                 self.chase()
             elif self.mode is CHASE:
                 self.scatter()
 
     def scatter(self):
-        self.mode = SCATTER
+        self.mode = FLEEING
         self.time = 7
         self.timer = 0
 

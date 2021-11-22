@@ -1,12 +1,12 @@
 import pygame
 from vector import Vector2
-from constants import *
+from constants_file import *
 import numpy as np
 
 
-class Pellet(object):
+class Nonosse(object):
     def __init__(self, row, column):
-        self.name = PELLET
+        self.name = NONOSSE
         self.pos = Vector2(column * TILE_W, row * TILE_H)
         self.color = WHITE
         self.radius = int(4 * TILE_W / 16)
@@ -20,10 +20,10 @@ class Pellet(object):
             pygame.draw.circle(screen, self.color, p, self.radius)
 
 
-class PowerPellet(Pellet):
+class PowerPellet(Nonosse):
     def __init__(self, row, column):
-        Pellet.__init__(self, row, column)
-        self.name = P_PELLET
+        Nonosse.__init__(self, row, column)
+        self.name = S_NONOSSE
         self.radius = int(8 * TILE_W / 16)
         self.points = 50
         self.flashTime = 0.1
@@ -36,7 +36,7 @@ class PowerPellet(Pellet):
             self.timer = 0
 
 
-class PelletGroup(object):
+class NonosseGroup(object):
     def __init__(self, pelletfile):
         self.pelletList = []
         self.powerpellets = []
@@ -52,7 +52,7 @@ class PelletGroup(object):
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
                 if data[row][col] in ['.', '+']:
-                    self.pelletList.append(Pellet(row, col))
+                    self.pelletList.append(Nonosse(row, col))
                 elif data[row][col] in ['P', 'p']:
                     pp = PowerPellet(row, col)
                     self.pelletList.append(pp)

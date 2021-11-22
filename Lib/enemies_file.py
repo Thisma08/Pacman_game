@@ -1,9 +1,9 @@
 import pygame as pg
 from pygame.locals import *
 from vector import Vector2
-from constants import *
-from character import Character
-from modes import ModeController
+from constants_file import *
+from characters_file import Character
+from modes_file import ModeController
 
 class Enemy(Character):
     def __init__(self, node, player=None):
@@ -11,7 +11,7 @@ class Enemy(Character):
         self.name = ENEMY
         self.points = 200
         self.color = RED
-        self.radius = 18
+        self.radius = 12
         self.speed = 120
         self.goal = Vector2()
         self.directionMethod = self.goalDirection
@@ -20,7 +20,7 @@ class Enemy(Character):
 
     def update(self, dt):
         self.mode.update(dt)
-        if self.mode.current is SCATTER:
+        if self.mode.current is FLEEING:
             self.scatter()
         elif self.mode.current is CHASE:
             self.chase()

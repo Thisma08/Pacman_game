@@ -1,8 +1,8 @@
 import pygame as pg
 from pygame.locals import *
 from vector import Vector2
-from constants import *
-from character import Character
+from constants_file import *
+from characters_file import Character
 
 class Player(Character):
     def __init__(self, node):
@@ -12,7 +12,7 @@ class Player(Character):
                            RIGHT: Vector2(1, 0)}
         self.direction = STOP
         self.speed = 120
-        self.radius = 18
+        self.radius = 12
         self.color = YELLOW
         self.node = node
         self.setPosition()

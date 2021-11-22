@@ -1,21 +1,20 @@
 import pygame as pg
 from vector import Vector2
-from constants import *
+from constants_file import *
 import numpy as np
 
 
 class Wall(object):
     def __init__(self, row, col):
         self.name = WALL
-        self.pos = Vector2(col * TILE_W, row * TILE_H)
+        self.pos = Vector2(col * TILE_W - TILE_W/2, row * TILE_H - TILE_H/2)
         self.color = BLUE
         self.visible = True
 
     def render(self, screen):
         if self.visible:
             p = self.pos.asInt()
-            #pg.draw.rect(screen, self.color, (p, TILE_W, TILE_H))
-
+            pg.draw.rect(screen, self.color, pg.Rect(p, (TILE_W, TILE_H)))
 
 class WallGroup(object):
     def __init__(self, wallfile):

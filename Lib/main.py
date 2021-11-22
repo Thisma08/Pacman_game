@@ -1,11 +1,11 @@
 import pygame as pg
 from pygame.locals import *
-from constants import *
-from player import Player
-from nodes import NodeGroup
-from pellets import PelletGroup
-from enemies import Enemy
-from walls import WallGroup
+from constants_file import *
+from player_file import Player
+from intersections_file import InterGroup
+from nonosses_file import NonosseGroup
+from enemies_file import Enemy
+from walls_file import WallGroup
 
 
 class Game(object):
@@ -21,12 +21,12 @@ class Game(object):
 
     def startGame(self):
         self.setBackground()
-        self.nodes = NodeGroup("maze1.txt")
-        self.pellets = PelletGroup("maze1.txt")
+        self.nodes = InterGroup("maze1.txt")
+        self.pellets = NonosseGroup("maze1.txt")
         self.walls = WallGroup("maze1.txt")
         self.nodes.setPortalPair((18, 17), (45, 17))
-        self.player = Player(self.nodes.getStartTempNode())
-        self.enemy = Enemy(self.nodes.getStartTempNode(), self.player)
+        self.player = Player(self.nodes.getStartTempInter())
+        self.enemy = Enemy(self.nodes.getStartTempInter(), self.player)
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
