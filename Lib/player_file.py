@@ -17,7 +17,7 @@ class Player(Character):
         self.node = node
         self.setPosition()
         self.target = node
-        self.collideRadius = 10
+        self.collideRadius = 3
 
     def getValidKey(self):
         key_pressed = pg.key.get_pressed()
