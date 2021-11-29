@@ -1,4 +1,5 @@
 from constants_file import *
+from enemies_file import *
 
 class MainMode(object):
     def __init__(self):
@@ -7,31 +8,46 @@ class MainMode(object):
 
     def update(self, dt):
         self.timer += dt
-        if self.timer >= self.time:
-            if self.mode is FLEEING:
+        if self.timer >= self.duration:
+            if self.mode is SCATTER:
                 self.chase()
             elif self.mode is CHASE:
                 self.scatter()
 
     def scatter(self):
-        self.mode = FLEEING
-        self.time = 7
+        self.mode = SCATTER
+        self.duration = 7
         self.timer = 0
 
     def chase(self):
         self.mode = CHASE
-        self.time = 20
+        self.duration = 20
         self.timer = 0
 
 class ModeController(object):
     def __init__(self, entity):
         self.timer = 0
-        self.time = None
+        self.duration = None
         self.mainmode = MainMode()
         self.current = self.mainmode.mode
         self.entity = entity
 
+    def setFreightMode(self):
+        if self.current in [SCATTER, CHASE]:
+            self.timer = 0
+            self.duration = 7
+            self.current = FREIGHT
+        elif self.current is FREIGHT:
+            self.timer = 0
+
     def update(self, dt):
         self.mainmode.update(dt)
-        self.current = self.mainmode.mode
+        if self.current is FREIGHT:
+            self.timer += dt
+            if self.timer >= self.duration:
+                self.duration = None
+                self.entity.normalMode()
+                self.current = self.mainmode.mode
+        else:
+            self.current = self.mainmode.mode
 

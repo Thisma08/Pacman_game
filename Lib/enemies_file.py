@@ -20,7 +20,7 @@ class Enemy(Character):
 
     def update(self, dt):
         self.mode.update(dt)
-        if self.mode.current is FLEEING:
+        if self.mode.current is SCATTER:
             self.scatter()
         elif self.mode.current is CHASE:
             self.chase()
@@ -32,3 +32,22 @@ class Enemy(Character):
     def chase(self):
         self.goal = self.player.pos
 
+    def setFreightMode(self):
+        if self.current in [SCATTER, CHASE]:
+            self.timer = 0
+            self.duration = 7
+            self.current = FREIGHT
+        elif self.current is FREIGHT:
+            self.timer = 0
+
+    def startFreight(self):
+        self.mode.setFreightMode()
+        if self.mode.current == FREIGHT:
+            self.color = BLUE
+            self.setSpeed(50)
+            self.directionMethod = self.randomDirection
+
+    def normalMode(self):
+        self.color = RED
+        self.setSpeed(78)
+        self.directionMethod = self.goalDirection

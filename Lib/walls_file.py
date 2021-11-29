@@ -8,7 +8,7 @@ class Wall(object):
     def __init__(self, row, col):
         self.name = WALL
         self.pos = Vector2(col * TILE_W - TILE_W/2, row * TILE_H - TILE_H/2)
-        self.color = BLUE
+        self.color = GREEN
         self.visible = True
 
     def render(self, screen):

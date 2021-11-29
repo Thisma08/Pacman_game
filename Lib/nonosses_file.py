@@ -20,7 +20,7 @@ class Nonosse(object):
             pygame.draw.circle(screen, self.color, p, self.radius)
 
 
-class PowerPellet(Nonosse):
+class SuperNonosse(Nonosse):
     def __init__(self, row, column):
         Nonosse.__init__(self, row, column)
         self.name = S_NONOSSE
@@ -37,35 +37,35 @@ class PowerPellet(Nonosse):
 
 
 class NonosseGroup(object):
-    def __init__(self, pelletfile):
-        self.pelletList = []
-        self.powerpellets = []
-        self.createPelletList(pelletfile)
+    def __init__(self, nonossefile):
+        self.nonosseList = []
+        self.all_supernonosses = []
+        self.createNonosseList(nonossefile)
         self.numEaten = 0
 
     def update(self, dt):
-        for powerpellet in self.powerpellets:
+        for powerpellet in self.all_supernonosses:
             powerpellet.update(dt)
 
-    def createPelletList(self, pelletfile):
-        data = self.readPelletfile(pelletfile)
+    def createNonosseList(self, nonossefile):
+        data = self.readNonossefile(nonossefile)
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
                 if data[row][col] in ['.', '+']:
-                    self.pelletList.append(Nonosse(row, col))
+                    self.nonosseList.append(Nonosse(row, col))
                 elif data[row][col] in ['P', 'p']:
-                    pp = PowerPellet(row, col)
-                    self.pelletList.append(pp)
-                    self.powerpellets.append(pp)
+                    pp = SuperNonosse(row, col)
+                    self.nonosseList.append(pp)
+                    self.all_supernonosses.append(pp)
 
-    def readPelletfile(self, textfile):
+    def readNonossefile(self, textfile):
         return np.loadtxt(textfile, dtype='<U1')
 
     def isEmpty(self):
-        if len(self.pelletList) == 0:
+        if len(self.nonosseList) == 0:
             return True
         return False
 
     def render(self, screen):
-        for pellet in self.pelletList:
+        for pellet in self.nonosseList:
             pellet.render(screen)

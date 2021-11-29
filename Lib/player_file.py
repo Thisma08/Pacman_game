@@ -31,13 +31,13 @@ class Player(Character):
             return RIGHT
         return STOP
 
-    def eatPellets(self, pelletList):
-        for pellet in pelletList:
-            d = self.pos - pellet.pos
+    def eatNonosses(self, nonosseList):
+        for nonosse in nonosseList:
+            d = self.pos - nonosse.pos
             dSquared = d.magnitudeSquared()
-            rSquared = (pellet.radius + self.collideRadius)**2
+            rSquared = (nonosse.radius + self.collideRadius)**2
             if dSquared <= rSquared:
-                return pellet
+                return nonosse
         return None
 
     def update(self, dt):

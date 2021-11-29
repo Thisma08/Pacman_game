@@ -22,7 +22,7 @@ class Game(object):
     def startGame(self):
         self.setBackground()
         self.nodes = InterGroup("maze1.txt")
-        self.pellets = NonosseGroup("maze1.txt")
+        self.nonosses = NonosseGroup("maze1.txt")
         self.walls = WallGroup("maze1.txt")
         self.nodes.setPortalPair((18, 17), (45, 17))
         self.player = Player(self.nodes.getStartTempInter())
@@ -35,8 +35,8 @@ class Game(object):
         dt = self.clock.tick(30) / 1000.0
         self.player.update(dt)
         self.enemy.update(dt)
-        self.pellets.update(dt)
-        self.checkPelletEvents()
+        self.nonosses.update(dt)
+        self.checkNonosseEvents()
         self.checkEvents()
         self.render()
 
@@ -45,16 +45,19 @@ class Game(object):
             if event.type == pg.QUIT:
                 exit()
 
-    def checkPelletEvents(self):
-        pellet = self.player.eatPellets(self.pellets.pelletList)
-        if pellet:
-            self.pellets.numEaten += 1
-            self.pellets.pelletList.remove(pellet)
+    def checkNonosseEvents(self):
+        nonosse = self.player.eatNonosses(self.nonosses.nonosseList)
+        if nonosse:
+            self.nonosses.numEaten += 1
+            self.nonosses.nonosseList.remove(nonosse)
+            if nonosse.name == S_NONOSSE:
+                self.enemy.startFreight()
+
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
         self.nodes.render(self.screen)
-        self.pellets.render(self.screen)
+        self.nonosses.render(self.screen)
         self.walls.render(self.screen)
         self.player.render(self.screen)
         self.enemy.render(self.screen)
