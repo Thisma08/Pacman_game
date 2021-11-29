@@ -27,6 +27,9 @@ class Game(object):
         self.nodes.setPortalPair((18, 17), (45, 17))
         self.player = Player(self.nodes.getStartTempInter())
         self.enemy = Enemy(self.nodes.getStartTempInter(), self.player)
+        homekey = self.nodes.createHomeInter(29.5, 14)
+        self.nodes.connectHomeInter(homekey, (30, 14), LEFT)
+        self.nodes.connectHomeInter(homekey, (33, 14), RIGHT)
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0

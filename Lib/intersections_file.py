@@ -13,8 +13,6 @@ class Intersection(object):
             if self.neighbors[n] is not None:
                 line_start = self.pos.asTuple()
                 line_end = self.neighbors[n].pos.asTuple()
-                #pg.draw.line(screen, GREY, line_start, line_end, 4)
-                #pg.draw.circle(screen, GREY, self.pos.asInt(), 12)
 
 class InterGroup(object):
     def __init__(self, level):
@@ -26,6 +24,7 @@ class InterGroup(object):
         self.createInterTable(data)
         self.connectHor(data)
         self.connectVer(data)
+        self.homekey = None
 
     def connectHor(self, data, xoffset=0, yoffset=0):
         for row in list(range(data.shape[0])):
@@ -96,3 +95,22 @@ class InterGroup(object):
     def render(self, screen):
         for inter in self.interLUT.values():
             inter.render(screen)
+
+    def createHomeInter(self, xoffset, yoffset):
+        homedata = np.array([['X', 'X', '+', 'X', 'X'],
+                             ['X', 'X', '.', 'X', 'X'],
+                             ['+', 'X', '.', 'X', '+'],
+                             ['+', '.', '+', '.', '+'],
+                             ['+', 'X', 'X', 'X', '+']])
+
+        self.createInterTable(homedata, xoffset, yoffset)
+        self.connectHor(homedata, xoffset, yoffset)
+        self.connectVer(homedata, xoffset, yoffset)
+        self.homekey = self.constructKey(xoffset + 2, yoffset)
+        return self.homekey
+
+    def connectHomeInter(self, homekey, otherkey, direction):
+        key = self.constructKey(*otherkey)
+        self.interLUT[homekey].neighbors[direction] = self.interLUT[key]
+        self.interLUT[key].neighbors[direction * -1] = self.interLUT[homekey]
+
