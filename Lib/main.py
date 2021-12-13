@@ -21,15 +21,16 @@ class Game(object):
 
     def startGame(self):
         self.setBackground()
-        self.nodes = InterGroup("maze1.txt")
+        self.inters = InterGroup("maze1.txt")
         self.nonosses = NonosseGroup("maze1.txt")
         self.walls = WallGroup("maze1.txt")
-        self.nodes.setPortalPair((18, 17), (45, 17))
-        self.player = Player(self.nodes.getStartTempInter())
-        self.enemy = Enemy(self.nodes.getStartTempInter(), self.player)
-        homekey = self.nodes.createHomeInter(29.5, 14)
-        self.nodes.connectHomeInter(homekey, (30, 14), LEFT)
-        self.nodes.connectHomeInter(homekey, (33, 14), RIGHT)
+        self.inters.setPortalPair((18, 17), (45, 17))
+        self.player = Player(self.inters.getStartTempInter())
+        self.enemy = Enemy(self.inters.getStartTempInter(), self.player)
+        self.enemy.setSpawnInter(self.inters.getInterFromTiles(2+29.5, 3+14))
+        homekey = self.inters.createHomeInters(29.5, 14)
+        self.inters.connectHomeInter(homekey, (30, 14), LEFT)
+        self.inters.connectHomeInter(homekey, (33, 14), RIGHT)
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
@@ -37,6 +38,7 @@ class Game(object):
         self.enemy.update(dt)
         self.nonosses.update(dt)
         self.checkNonosseEvents()
+        self.checkEnemiesEvents()
         self.checkEvents()
         self.render()
 
@@ -53,10 +55,15 @@ class Game(object):
             if nonosse.name == S_NONOSSE:
                 self.enemy.startFreight()
 
+    def checkEnemiesEvents(self):
+        if self.player.collideEnemy(self.enemy):
+            if self.enemy.mode.current is FREIGHT:
+                self.enemy.startSpawn()
+
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
-        self.nodes.render(self.screen)
+        self.inters.render(self.screen)
         self.nonosses.render(self.screen)
         self.walls.render(self.screen)
         self.player.render(self.screen)

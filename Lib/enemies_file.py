@@ -5,9 +5,10 @@ from constants_file import *
 from characters_file import Character
 from modes_file import ModeController
 
+
 class Enemy(Character):
-    def __init__(self, node, player=None):
-        Character.__init__(self, node)
+    def __init__(self, inter, player=None):
+        Character.__init__(self, inter)
         self.name = ENEMY
         self.points = 200
         self.color = RED
@@ -44,10 +45,23 @@ class Enemy(Character):
         self.mode.setFreightMode()
         if self.mode.current == FREIGHT:
             self.color = BLUE
-            self.setSpeed(50)
+            self.setSpeed(40)
             self.directionMethod = self.randomDirection
 
     def normalMode(self):
         self.color = RED
         self.setSpeed(78)
         self.directionMethod = self.goalDirection
+
+    def spawn(self):
+        self.goal = self.spawnInter.pos
+
+    def setSpawnInter(self, inter):
+        self.spawnInter = inter
+
+    def startSpawn(self):
+        self.mode.setSpawnMode()
+        if self.mode.current == SPAWN:
+            self.setSpeed(150)
+            self.directionMethod = self.goalDirection
+            self.spawn()

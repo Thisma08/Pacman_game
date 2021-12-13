@@ -5,8 +5,8 @@ from constants_file import *
 from characters_file import Character
 
 class Player(Character):
-    def __init__(self, node):
-        Character.__init__(self, node)
+    def __init__(self, inter):
+        Character.__init__(self, inter)
         self.name = PLAYER
         self.directions = {STOP: Vector2(), UP: Vector2(0, -1), DOWN: Vector2(0, 1), LEFT: Vector2(-1, 0),
                            RIGHT: Vector2(1, 0)}
@@ -14,9 +14,9 @@ class Player(Character):
         self.speed = 120
         self.radius = 12
         self.color = YELLOW
-        self.node = node
+        self.inter = inter
         self.setPosition()
-        self.target = node
+        self.target = inter
         self.collideRadius = 3
 
     def getValidKey(self):
@@ -33,27 +33,35 @@ class Player(Character):
 
     def eatNonosses(self, nonosseList):
         for nonosse in nonosseList:
-            d = self.pos - nonosse.pos
-            dSquared = d.magnitudeSquared()
-            rSquared = (nonosse.radius + self.collideRadius)**2
-            if dSquared <= rSquared:
+            if self.collideCheck(nonosse):
                 return nonosse
         return None
+
+    def collideEnemy(self, enemy):
+        return self.collideCheck(enemy)
+
+    def collideCheck(self, touchedSprite):
+        d = self.pos - touchedSprite.pos
+        dSquared = d.magnitudeSquared()
+        rSquared = (self.collideRadius + touchedSprite.collideRadius) ** 2
+        if dSquared <= rSquared:
+            return True
+        return False
 
     def update(self, dt):
         self.pos += self.directions[self.direction]*self.speed*dt
         direction = self.getValidKey()
         if self.overshotTarget():
-            self.node = self.target
-            if self.node.neighbors[PORTAL] is not None:
-                self.node = self.node.neighbors[PORTAL]
+            self.inter = self.target
+            if self.inter.neighbors[PORTAL] is not None:
+                self.inter = self.inter.neighbors[PORTAL]
             self.target = self.getNewTarget(direction)
-            if self.target is not self.node:
+            if self.target is not self.inter:
                 self.direction = direction
             else:
                 self.target = self.getNewTarget(self.direction)
 
-            if self.target is self.node:
+            if self.target is self.inter:
                 self.direction = STOP
             self.setPosition()
         else:

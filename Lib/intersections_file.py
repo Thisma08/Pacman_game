@@ -82,8 +82,8 @@ class InterGroup(object):
         return None
 
     def getStartTempInter(self):
-        nodes = list(self.interLUT.values())
-        return nodes[0]
+        inters = list(self.interLUT.values())
+        return inters[0]
 
     def setPortalPair(self, pair1, pair2):
         key1 = self.constructKey(*pair1)
@@ -96,7 +96,7 @@ class InterGroup(object):
         for inter in self.interLUT.values():
             inter.render(screen)
 
-    def createHomeInter(self, xoffset, yoffset):
+    def createHomeInters(self, xoffset, yoffset):
         homedata = np.array([['X', 'X', '+', 'X', 'X'],
                              ['X', 'X', '.', 'X', 'X'],
                              ['+', 'X', '.', 'X', '+'],
