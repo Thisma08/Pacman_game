@@ -54,14 +54,16 @@ class Enemy(Character):
         self.directionMethod = self.goalDirection
 
     def spawn(self):
-        self.goal = self.spawnInter.pos
+        self.goal = Vector2()
 
     def setSpawnInter(self, inter):
         self.spawnInter = inter
 
     def startSpawn(self):
         self.mode.setSpawnMode()
+        pg.time.wait(1)
         if self.mode.current == SPAWN:
             self.setSpeed(150)
+            self.color = WHITE
             self.directionMethod = self.goalDirection
             self.spawn()

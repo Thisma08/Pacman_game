@@ -14,6 +14,9 @@ class Game(object):
         self.screen = pg.display.set_mode(SCREEN, 0, 32)
         self.background = None
         self.clock = pg.time.Clock()
+        self.running = True
+        self.score = 0
+        self.font_name = pg.font.match_font(FONT_NAME)
 
     def setBackground(self):
         self.background = pg.surface.Surface(SCREEN).convert()
@@ -27,10 +30,10 @@ class Game(object):
         self.inters.setPortalPair((18, 17), (45, 17))
         self.player = Player(self.inters.getStartTempInter())
         self.enemy = Enemy(self.inters.getStartTempInter(), self.player)
-        self.enemy.setSpawnInter(self.inters.getInterFromTiles(2+29.5, 3+14))
+        self.enemy.setSpawnInter(self.inters.getInterFromTiles(19, 4))
         homekey = self.inters.createHomeInters(29.5, 14)
-        self.inters.connectHomeInter(homekey, (30, 14), LEFT)
-        self.inters.connectHomeInter(homekey, (33, 14), RIGHT)
+        self.inters.connectHomeInters(homekey, (30, 14), LEFT)
+        self.inters.connectHomeInters(homekey, (33, 14), RIGHT)
 
     def update(self):
         dt = self.clock.tick(30) / 1000.0
@@ -46,11 +49,15 @@ class Game(object):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 exit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.running = False
 
     def checkNonosseEvents(self):
         nonosse = self.player.eatNonosses(self.nonosses.nonosseList)
         if nonosse:
             self.nonosses.numEaten += 1
+            self.score += 10
             self.nonosses.nonosseList.remove(nonosse)
             if nonosse.name == S_NONOSSE:
                 self.enemy.startFreight()
@@ -60,6 +67,13 @@ class Game(object):
             if self.enemy.mode.current is FREIGHT:
                 self.enemy.startSpawn()
 
+    def draw_text(self, text, size, color, x, y):
+        font = pg.font.Font(self.font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        self.screen.blit(text_surface, text_rect)
+
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
@@ -68,11 +82,13 @@ class Game(object):
         self.walls.render(self.screen)
         self.player.render(self.screen)
         self.enemy.render(self.screen)
+        self.draw_text("SCORE : ", 40, WHITE, 100, 30)
+        self.draw_text(str(self.score), 40, WHITE, 200, 30)
         pg.display.update()
 
 
 if __name__ == "__main__":
     game = Game()
     game.startGame()
-    while True:
+    while game.running:
         game.update()

@@ -13,6 +13,9 @@ class Intersection(object):
             if self.neighbors[n] is not None:
                 line_start = self.pos.asTuple()
                 line_end = self.neighbors[n].pos.asTuple()
+                #pg.draw.line(screen, WHITE, line_start, line_end, 4)
+                #pg.draw.circle(screen, RED, self.pos.asInt(), 12)
+
 
 class InterGroup(object):
     def __init__(self, level):
@@ -109,8 +112,7 @@ class InterGroup(object):
         self.homekey = self.constructKey(xoffset + 2, yoffset)
         return self.homekey
 
-    def connectHomeInter(self, homekey, otherkey, direction):
+    def connectHomeInters(self, homekey, otherkey, direction):
         key = self.constructKey(*otherkey)
         self.interLUT[homekey].neighbors[direction] = self.interLUT[key]
         self.interLUT[key].neighbors[direction * -1] = self.interLUT[homekey]
-
