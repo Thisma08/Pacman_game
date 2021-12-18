@@ -30,7 +30,10 @@ class Game(object):
         self.inters.setPortalPair((18, 17), (45, 17))
         self.player = Player(self.inters.getStartTempInter())
         self.enemy = Enemy(self.inters.getStartTempInter(), self.player)
-        self.enemy.setSpawnInter(self.inters.getInterFromTiles(19, 4))
+        # spawnkey = self.inters.constructKey(2+29.5, 3+14)
+        # self.enemy.setSpawnInter(self.inters.interLUT[spawnkey])
+        self.enemy.setSpawnInter(self.inters.getInterFromTiles(30, 14))
+        # self.enemy.setSpawnInter(self.inters.getInterFromTiles(29.5+2, 17+3))
         homekey = self.inters.createHomeInters(29.5, 14)
         self.inters.connectHomeInters(homekey, (30, 14), LEFT)
         self.inters.connectHomeInters(homekey, (33, 14), RIGHT)
@@ -66,6 +69,7 @@ class Game(object):
         if self.player.collideEnemy(self.enemy):
             if self.enemy.mode.current is FREIGHT:
                 self.enemy.startSpawn()
+                self.score += 200
 
     def draw_text(self, text, size, color, x, y):
         font = pg.font.Font(self.font_name, size)
@@ -83,7 +87,7 @@ class Game(object):
         self.player.render(self.screen)
         self.enemy.render(self.screen)
         self.draw_text("SCORE : ", 40, WHITE, 100, 30)
-        self.draw_text(str(self.score), 40, WHITE, 200, 30)
+        self.draw_text(str(self.score), 40, WHITE, 210, 30)
         pg.display.update()
 
 

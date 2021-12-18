@@ -13,8 +13,8 @@ class Intersection(object):
             if self.neighbors[n] is not None:
                 line_start = self.pos.asTuple()
                 line_end = self.neighbors[n].pos.asTuple()
-                #pg.draw.line(screen, WHITE, line_start, line_end, 4)
-                #pg.draw.circle(screen, RED, self.pos.asInt(), 12)
+                # pg.draw.line(screen, WHITE, line_start, line_end, 4)
+                # pg.draw.circle(screen, RED, self.pos.asInt(), 12)
 
 
 class InterGroup(object):

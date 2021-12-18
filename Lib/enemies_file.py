@@ -54,7 +54,7 @@ class Enemy(Character):
         self.directionMethod = self.goalDirection
 
     def spawn(self):
-        self.goal = Vector2()
+        self.goal = self.spawnInter.pos
 
     def setSpawnInter(self, inter):
         self.spawnInter = inter
