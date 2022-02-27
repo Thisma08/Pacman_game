@@ -7,14 +7,24 @@ class Intersection(object):
     def __init__(self, x, y):
         self.pos = Vector2(x, y)
         self.neighbors = {UP: None, DOWN: None, LEFT: None, RIGHT: None, PORTAL: None}
+        self.access = {UP:[PLAYER, ENEMY1, ENEMY2, ENEMY3, ENEMY4, FRUIT],
+                       DOWN:[PLAYER, ENEMY1, ENEMY2, ENEMY3, ENEMY4, FRUIT],
+                       LEFT:[PLAYER, ENEMY1, ENEMY2, ENEMY3, ENEMY4, FRUIT],
+                       RIGHT:[PLAYER, ENEMY1, ENEMY2, ENEMY3, ENEMY4, FRUIT]}
+
+    def denyAccess(self, direction, character):
+        if character.name in self.access[direction]:
+            self.access[direction].remove(character.name)
+
+    def allowAccess(self, direction, character):
+        if character.name not in self.access[direction]:
+            self.access[direction].append(character.name)
 
     def render(self, screen):
         for n in self.neighbors.keys():
             if self.neighbors[n] is not None:
                 line_start = self.pos.asTuple()
                 line_end = self.neighbors[n].pos.asTuple()
-                # pg.draw.line(screen, WHITE, line_start, line_end, 4)
-                # pg.draw.circle(screen, RED, self.pos.asInt(), 12)
 
 
 class InterGroup(object):
@@ -99,20 +109,35 @@ class InterGroup(object):
         for inter in self.interLUT.values():
             inter.render(screen)
 
-    def createHomeInters(self, xoffset, yoffset):
-        homedata = np.array([['X', 'X', '+', 'X', 'X'],
-                             ['X', 'X', '.', 'X', 'X'],
-                             ['+', 'X', '.', 'X', '+'],
-                             ['+', '.', '+', '.', '+'],
-                             ['+', 'X', 'X', 'X', '+']])
+    def denyAccess(self, col, row, direction, character):
+        inter = self.getInterFromTiles(col, row)
+        if inter is not None:
+            inter.denyAccess(direction, character)
 
-        self.createInterTable(homedata, xoffset, yoffset)
-        self.connectHor(homedata, xoffset, yoffset)
-        self.connectVer(homedata, xoffset, yoffset)
-        self.homekey = self.constructKey(xoffset + 2, yoffset)
-        return self.homekey
+    def allowAccess(self, col, row, direction, character):
+        inter = self.getInterFromTiles(col, row)
+        if inter is not None:
+            inter.allowAccess(direction, character)
 
-    def connectHomeInters(self, homekey, otherkey, direction):
-        key = self.constructKey(*otherkey)
-        self.interLUT[homekey].neighbors[direction] = self.interLUT[key]
-        self.interLUT[key].neighbors[direction * -1] = self.interLUT[homekey]
+    def denyAccessList(self, col, row, direction, characters):
+        for character in characters:
+            self.denyAccess(col, row, direction, character)
+
+    def allowAccessList(self, col, row, direction, characters):
+        for character in characters:
+            self.allowAccess(col, row, direction, character)
+
+    def denyHomeAccess(self, character):
+        self.getInterFromTiles(32, 14).denyAccess(DOWN, character)
+
+    def allowHomeAccess(self, character):
+        self.getInterFromTiles(32, 14).allowAccess(DOWN, character)
+
+    def denyHomeAccessList(self, characters):
+        for character in characters:
+            self.denyHomeAccess(character)
+
+    def allowHomeAccessList(self, characters):
+        for character in characters:
+            self.allowHomeAccess(character)
+

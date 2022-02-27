@@ -10,7 +10,7 @@ class Player(Character):
         self.name = PLAYER
         self.directions = {STOP: Vector2(), UP: Vector2(0, -1), DOWN: Vector2(0, 1), LEFT: Vector2(-1, 0),
                            RIGHT: Vector2(1, 0)}
-        self.direction = STOP
+        self.direction = LEFT
         self.speed = 120
         self.radius = 12
         self.color = YELLOW
@@ -18,6 +18,7 @@ class Player(Character):
         self.setPosition()
         self.target = inter
         self.collideRadius = 3
+        self.alive = True
 
     def getValidKey(self):
         key_pressed = pg.key.get_pressed()
@@ -47,6 +48,15 @@ class Player(Character):
         if dSquared <= rSquared:
             return True
         return False
+
+    def reset(self):
+        Character.reset(self)
+        self.direction = LEFT
+        self.alive = True
+
+    def die(self):
+        self.alive = False
+        self.direction = STOP
 
     def update(self, dt):
         self.pos += self.directions[self.direction]*self.speed*dt

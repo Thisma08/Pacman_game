@@ -67,5 +67,5 @@ class NonosseGroup(object):
         return False
 
     def render(self, screen):
-        for pellet in self.nonosseList:
-            pellet.render(screen)
+        for nonosse in self.nonosseList:
+            nonosse.render(screen)
